@@ -63,10 +63,16 @@ class ScheduleController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(ScheduledClass $schedule)
-    {
-        if(auth()->user()->id()!== $schedule->instructor_id){            
+    { 
+        // normal Method
+        // if(auth()->user()->id()!== $schedule->instructor_id){            
+        //     abort(403);
+        // }
+        // using policy
+        if(auth()->user()->cannot('delete',$schedule)){
             abort(403);
         }
+
         $schedule->delete();
         return redirect()->route('schedule.index');
         
