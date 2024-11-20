@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,10 +11,18 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', DashboardController::class)->middleware(['auth'])->name('dashboard');
+Route::middleware(['auth','role:member'])->group(function(){
+    
+
+Route::get('member/book',[BookingController::class,'create'])->name('booking.create');
+Route::post('member/bookings',[BookingController::class,'store'])->name('booking.store');
+Route::get('member/bookings',[BookingController::class,'index'])->name('booking.index');
+Route::delete('member/bookings',[BookingController::class,'destroy'])->name('booking.destroy');
 
 Route::get('member/dashboard', function () {
     return view('member.dashboard');
 })->middleware(['auth','role:member'])->name('member.dashboard');
+});
 
 Route::get('instructor/dashboard', function () {
     return view('instructor.dashboard');
