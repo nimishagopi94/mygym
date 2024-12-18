@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Events\ClassCanceled;
 use App\Models\ScheduledClass;
 use App\Models\ClassType;
 use Illuminate\Http\Request;
@@ -72,8 +72,10 @@ class ScheduleController extends Controller
         if(auth()->user()->cannot('delete',$schedule)){
             abort(403);
         }
-
-        $schedule->delete();
+        
+        ClassCanceled::dispatch($schedule);
+        // $schedule->delete();
+        // $schedule->members()->detach();
         return redirect()->route('schedule.index');
         
     }
