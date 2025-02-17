@@ -14,13 +14,13 @@ use App\Models\ScheduledClass;
 class ClassCanceled
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $scheduledClass;
+    
     /**
      * Create a new event instance.
      */
-    public function __construct(ScheduledClass $scheduledClass)
+    public function __construct(public ScheduledClass $scheduledClass)
     {
-        $this->scheduledClass = $scheduledClass;
+        
     }
 
     /**
