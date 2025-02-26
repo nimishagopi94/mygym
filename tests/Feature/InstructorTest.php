@@ -55,5 +55,32 @@ test('instructor_can_delete_a_class',function(){
    $this->assertDatabaseMissing('scheduled_classes',[
     'id' => $scheduleClass->id
    ]);
+});
+   test('test_cannot_cancel_class_less_than_two_hours_before',function(){
+    //given
+    $user = User::factory()->create([
+        'role'=>'instructor'
+    ]);
+
+   $this->seed(ClassTypeSeeder::class);
+   $scheduledClass = scheduledClass::create([
+    'instructor_id' => $user->id,
+    'class_type_id' => ClassType::first()->id,
+    'date_time' => now()->addHours(1)->minutes(0)->seconds(0)    
+   ]);
+   //when
+        $response = $this->actingAs($user)
+            ->get('/instructor/schedule');
+        $response->assertDontSeeText('Cancel');
+
+        $response = $this->actingAs($user)
+            ->delete('/instructor/schedule/'.$scheduledClass->id);           
    
+   //then 
+   $this->assertDatabaseHas('scheduled_classes',[
+    'id' =>$scheduledClass->id
+]);
+   
+
+
 });
